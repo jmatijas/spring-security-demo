@@ -1,4 +1,4 @@
-# DefaultSpringSecurityDemo README
+# README
 
 ### Run dev env with redis
 - Start redis stack with docker compose
