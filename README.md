@@ -7,7 +7,7 @@
 
 ### Redis Insight
 - Open in web browser `localhost:5540`
-- Add connection to existing database: 'redis-dev:6379'
+- Add connection to existing database: `redis-dev:6379`
 
 ### Useful commands
 
