@@ -1,0 +1,18 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: redis-dev
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: always
+
+  # Optional: A Web UI to see your Spring Sessions visually
+  redis-insight:
+    image: redis/redisinsight:latest
+    ports:
+      - "5540:5540"
+
+volumes:
+  redis_data:
