@@ -45,7 +45,7 @@ public class BasicConfiguration {
                         //.anyRequest().authenticated()
                         .anyRequest().permitAll()
                 )
-                .httpBasic(Customizer.withDefaults())
+                .formLogin(Customizer.withDefaults())
                 .build();
     }
 
