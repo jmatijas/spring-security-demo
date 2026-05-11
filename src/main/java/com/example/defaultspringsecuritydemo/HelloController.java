@@ -17,6 +17,12 @@ public class HelloController {
         return "Hello World!";
     }
 
+    @GetMapping("/public")
+    String helloPublic() {
+        log.info("helloPublic()");
+        return "Hello Public!";
+    }
+
     @GetMapping("/admin")
     String helloAdmin() {
         log.info("helloAdmin()");
