@@ -6,10 +6,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -19,9 +23,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest()
 // @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) // -->> Starts full embedded web server
 @AutoConfigureMockMvc
+@Testcontainers
 class MockMvcIntegrationTests {
 
     private static final Logger log = LoggerFactory.getLogger(MockMvcIntegrationTests.class);
+
+    @ServiceConnection
+    @Container
+    static GenericContainer<?> container = new GenericContainer<>("redis:7-alpine")
+            .withExposedPorts(6379);
 
     @Autowired
     private MockMvc mockMvc;

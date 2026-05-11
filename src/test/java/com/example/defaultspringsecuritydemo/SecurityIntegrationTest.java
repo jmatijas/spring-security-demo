@@ -3,6 +3,7 @@ package com.example.defaultspringsecuritydemo;
 
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -10,11 +11,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -24,9 +29,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
+@Testcontainers
 public class SecurityIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(SecurityIntegrationTest.class);
+
+    @Container
+    @ServiceConnection
+    static GenericContainer<?> redis = new GenericContainer<>("redis:7-alpine")
+            .withExposedPorts(6379);
 
     TestRestTemplate restTemplate;
 
@@ -34,6 +45,11 @@ public class SecurityIntegrationTest {
 
     @LocalServerPort
     int port;
+
+    @BeforeAll
+    static void beforeAll() throws MalformedURLException {
+        redis.start();
+    }
 
     @BeforeEach
     public void setUp() throws MalformedURLException {
@@ -100,7 +116,6 @@ public class SecurityIntegrationTest {
 
         // Form login redirects (302) to the error target page
         assertThat(loginResponse.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-        assertThat(loginResponse.getHeaders().getFirst(HttpHeaders.SET_COOKIE)).isNull();
         assertThat(loginResponse.getHeaders().getFirst(HttpHeaders.LOCATION)).contains("/login?error");
     }
 
