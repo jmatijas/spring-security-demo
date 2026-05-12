@@ -18,7 +18,7 @@ public class HelloController {
     String helloHome(Model model, Authentication authentication) {
         log.info("helloHome()");
         if (authentication != null) {
-            System.out.println("User is: " + authentication.getName());
+            log.info("User is: {}", authentication.getName());
             model.addAttribute("user", authentication.getPrincipal());
         } else {
             System.out.println("Authentication is NULL in Controller!");
