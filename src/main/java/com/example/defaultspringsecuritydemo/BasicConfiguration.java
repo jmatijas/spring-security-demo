@@ -37,18 +37,23 @@ public class BasicConfiguration {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/login", "/public/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/files/**").authenticated() // all roles authorized
-                        .requestMatchers("/public/**").permitAll()
-                        .requestMatchers("/").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")             // Point to your custom login page (optional)
+                        .loginPage("/login") // Point to your custom login page
+                        .loginProcessingUrl("/login") // The URL the form POSTs to
                         .defaultSuccessUrl("/", true)    // Redirect here after successful login
                         .permitAll())
+                .logout(logout -> logout.permitAll())
+//                // Part required for rest api beside serving web pages
+//                .exceptionHandling(exceptions -> exceptions
+//                        .defaultAuthenticationEntryPointFor(
+//                                new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
+//                                new AntPathRequestMatcher("/api/**")
+//                        ))
                 .build();
     }
 
