@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Home - My Application</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        header { border-bottom: 2px solid #eee; margin-bottom: 20px; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .user-info { background: #e9ecef; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .badge { background: #007bff; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.8em; }
+        button { background-color: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        button:hover { background-color: #c82333; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Welcome Home</h1>
+        <!-- Logout form: th:action automatically handles the CSRF token -->
+        <form th:action="@{/logout}" method="post">
+            <button type="submit">Log Out</button>
+        </form>
+    </header>
+
+    <div class="user-info">
+        <h3>Logged-in User Details</h3>
+        <p><strong>Username:</strong> <span sec:authentication="name">Unknown User</span></p>
+
+        <!-- Accessing roles/authorities -->
+        <p><strong>Roles:</strong>
+            <span sec:authorize="isAuthenticated()">
+                <span th:each="authority : ${#authentication.authorities}"
+                      class="badge"
+                      th:text="${authority.authority}">ROLE</span>
+            </span>
+        </p>
+
+        <!-- Conditional content based on role -->
+        <div sec:authorize="hasRole('ADMIN')" style="color: #856404; background-color: #fff3cd; padding: 10px; border-radius: 5px; margin-top: 10px;">
+            <strong>Notice:</strong> You have Administrator privileges.
+        </div>
+    </div>
+
+    <main>
+        <p>This is your protected home page. Only authenticated users can see this content.</p>
+    </main>
+</div>
+
+<hr/>
+<h3>Security Debugging:</h3>
+<pre th:text="${#authentication}"></pre>
+</body>
+</html>

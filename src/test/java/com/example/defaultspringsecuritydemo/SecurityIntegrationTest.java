@@ -102,7 +102,7 @@ public class SecurityIntegrationTest {
         ResponseEntity<String> response = restTemplate.exchange(base.toString(), HttpMethod.GET, entity, String.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertThat(response.getBody()).isEqualTo("Hello World!");
+        assertThat(response.getBody()).contains("<title>Home");
     }
 
     @Test
