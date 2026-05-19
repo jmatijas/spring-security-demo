@@ -33,4 +33,10 @@ docker exec container-name redis-cli monitor
 docker exec container-name redis-cli ping
 docker exec container-name redis-cli dbsize
 
+#
+# PostgreSQL - connect with psql from inside container
+#
+docker exec -it -e PGPASSWORD=secret postgres-dev psql -U myuser -h localhost mydatabase
+
+
 ```
